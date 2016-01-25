@@ -1,0 +1,85 @@
+<div fd-grid="" id="grid"
+     xiwidth="100%" xiheight="100%"
+     ng-model="gridOptions"
+     xienable-Active-Cell-Highlight="false"
+     xidisplay-Order="header,filter,body,footer,pager"
+     xienable-Print="true"
+     xiclear-Selection-On-Data-Provider-Change="false"
+     xienable-Preference-Persistence="true"
+     xipreference-Persistence-Key="sampleGrid"
+     xion-Creation-Complete="gridCreationComplete"
+     xishow-Spinner-On-Filter-Page-Sort="true"
+     xienable-Selection-Cascade="true"
+     xienable-Selection-Bubble="true"
+     xienable-Tri-State-Checkbox="true"
+     xienable-Eager-Draw="true"
+     xienable-Toolbar-Actions="true"
+     xitoolbar-Action-Executed-Function="onExecuteToolbarAction"
+	 xitoolbar-Action-Valid-Function="isValidToolbarAction">
+    <level
+        xipage-Size="10"
+        xienable-Paging="true"
+        xichildren-Field="deals"
+        xiselected-Key-Field="id"
+        xichildren-Count-Field="id"
+        xiitem-Load-Mode="server"
+        xiitem-Load="gridLevelOneItemLoadHandler"
+        xifilter-Page-Sort-Change="gridLevelOneFilterPageSortChangeHandler"
+        xifilter-Page-Sort-Mode="server">
+        <columns>
+            <column xiwidth="100" xicolumn-Width-Mode="fixed" xiselectable="true" xidata-Field="id" xiheader-Text="ID" xifilter-Control="TextInput"></column>
+            <column xidata-Field="legalName" xiheader-Text="Name" xifilter-Control="TextInput"></column>
+            <column xiheader-Text="Logo" xiitem-Renderer="LogoRenderer"></column>
+            <column xiheader-Text="Website" xiitem-Renderer="LinkRenderer"></column>
+            <column xidata-Field="mailingAddress.line1" xiheader-Text="Address Line 1" xifilter-Control="TextInput"></column>
+            <column xidata-Field="mailingAddress.line2" xiheader-Text="Address Line 2" xifilter-Control="TextInput"></column>
+            <column xidata-Field="mailingAddress.city" xiheader-Text="City" xifilter-Control="TextInput"></column>
+            <column xidata-Field="mailingAddress.state" xiheader-Text="State" xifilter-Control="TextInput"></column>
+            <column xidata-Field="mailingAddress.country" xiheader-Text="Country" xifilter-Control="TextInput"></column>
+            <column xidata-Field="annualRevenue" xiheader-Text="Annual Revenue" xifilter-Control="TextInput"></column>
+            <column xidata-Field="numEmployees" xiheader-Text="Total Employees" xifilter-Control="TextInput"></column>
+            <column xienable-Cell-Click-Row-Select="false" xiexclude-From-Settings="true" xiexclude-From-Export="true" xiexclude-From-Print="true"></column>
+        </columns>
+        <next-level>
+            <level xichildren-Field="invoices"
+                   xiselected-Key-Field="id"
+                   xiitem-Load-Mode="server"
+                   xiforce-Pager-Row="true"
+                   xiitem-Load="gridLevelTwoItemLoadHandler"
+                   xifilter-Page-Sort-Mode="server"
+                   xifilter-Page-Sort-Change="gridLevelTwoFilterPageSortChangeHandler">
+                <columns>
+                    <column xieditable="true" xidata-Field="dealDescription" xiheader-Text="Deal Description" xifooter-Align="center" xifooter-Label-Function2="getFooterLabel" ></column>
+                    <column xieditable="true" xidata-Field="dealAmount" xiheader-Text="Deal Amount" xitext-Align="right" xifooter-Align="right" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatCurrencyLabelFunction" xifooter-Label-Function2="getFooterLabel"></column>
+                    <column xiitem-Editor="flexiciousNmsp.DatePicker" xieditable="true" xieditor-Data-Field="selectedDate"  xidata-Field="dealDate" xiheader-Text="Deal Date" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+                </columns>
+                <next-level>
+                    <level xichildren-Field="lineItems"
+                           xiselected-Key-Field="id"
+                           xiitem-Load-Mode="server"
+                           xiforce-Pager-Row="true"
+                           xiitem-Load="gridLevelThreeItemLoadHandler"
+                           xifilter-Page-Sort-Mode="server"
+                           xifilter-Page-Sort-Change="gridLevelThreeFilterPageSortChangeHandler">
+                        <columns>
+                            <column xieditable="true" xidata-Field="id" xiheader-Text="Invoice Number" ></column>
+                            <column xiitem-Editor="flexiciousNmsp.DatePicker"  xieditable="true" xieditor-Data-Field="selectedDate"  xidata-Field="invoiceDate" xiheader-Text="Invoice Date"  xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+                            <column xiitem-Editor="flexiciousNmsp.DatePicker"   xieditable="true" xieditor-Data-Field="selectedDate" xidata-Field="dueDate" xiheader-Text="Due Date" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+                        </columns>
+                        <next-level>
+                            <level
+                                xifilter-Page-Sort-Mode="server"
+                                xiforce-Pager-Row="true"
+                                xifilter-Page-Sort-Change="gridLevelFourFilterPageSortChangeHandler">
+                                <columns>
+                                    <column xieditable="true" xidata-Field="lineItemDescription" xiheader-Text="Line Item Description" xifooter-Label-Function2="getFooterLabel" xifooter-Align="center"></column>
+                                    <column xieditable="true" xidata-Field="lineItemAmount" xiheader-Text="Line Item Amount" xitext-Align="right" xifooter-Label-Function2="getFooterLabel" xifooter-Align="right" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatCurrencyLabelFunction"></column>
+                                </columns>
+                            </level>
+                        </next-level>
+                    </level>
+                </next-level>
+            </level>
+        </next-level>
+    </level>
+</div>

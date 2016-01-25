@@ -1,0 +1,910 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        function getLevel(element) {
+            return parseInt(element.data("level"));
+        }
+
+        function getIsOpen(element) {
+            var value = element.data("isopen");
+            var rval = false;
+
+            if (value) {
+                rval = parseInt(value) != 0;
+            }
+
+            return rval;
+        }
+
+        function setIsOpen(element, isOpen) {
+            element.data("isopen", isOpen ? 1 : 0);
+        }
+
+        function setIcon(thisElement, isOpen) {
+            var index = getLevel(thisElement) - 1;
+            var icon = '+';
+
+            if (isOpen) {
+                icon = '-';
+            }
+
+            var iconElement = thisElement.children().first();
+
+            if (index > 0) {
+                iconElement = iconElement.next();
+            }
+
+            iconElement.text(icon);
+        }
+
+        function udpateVisibility(element, state, targetLevel) {
+            var level = getLevel(element);
+            var wasOpen = getIsOpen(element);
+            var animationDelay = 250;
+
+            if (state && (wasOpen || (level == targetLevel))) {
+                element.show(animationDelay);
+                setIsOpen(element, true);
+            } else if (!state) {
+                element.hide(animationDelay);
+
+                if (level == targetLevel) {
+                    setIsOpen(element, false);
+                }
+            }
+        }
+
+        function setOpenClosed(element, open) {
+            var level = getLevel(element);
+            var nextElement = element.next();
+
+            if (nextElement) {
+                var childLevel = getLevel(nextElement);
+
+                while (nextElement && (getLevel(nextElement) > level)) {
+                    setIcon(element, open);
+                    udpateVisibility(nextElement, open, childLevel);
+                    nextElement = nextElement.next();
+                }
+            }
+        }
+
+        function doToggle() {
+            var thisElement = $(this);
+            var nextElement = thisElement.next();
+
+            if (nextElement) {
+                var visibility = nextElement.is(":visible")
+                setOpenClosed(thisElement, !visibility);
+            }
+        }
+
+        function open() {
+            setOpenClosed($(this), true);
+        }
+
+        function close() {
+            setOpenClosed($(this), false);
+        }
+
+        function expandAll() {
+            $("[data-isopen]").each(open);
+        }
+
+        function collapseAll() {
+            $("[data-isopen]").each(close);
+        }
+
+        $(document).ready(function () {
+            $("[data-isopen]").click(doToggle);
+            $("[data-isopen]").each(close);
+        });
+    </script>
+
+    <meta charset="utf-8" />
+    <title>Claim Status on the Web</title>
+    <style type="text/css">
+        body {
+            max-width: 1024px;
+            min-width:  600px;
+        }
+        .claimtable {
+            border-style: solid;
+            border-width: 0px;
+            border-collapse: collapse;
+            width: 100%;
+            font-family: Arial;
+            font-size: 12px;
+            padding: 0px;
+            background-color: #ffffff;
+            /*
+            outline: thin solid #dddddd;
+            */
+        }
+        .outertable {
+        }
+        .innertable {
+            outline: thin solid #a0a0a0;
+        }
+        .outerthead {
+            background-color: #f0f0f0;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .innerthead {
+            background-color: #f8f8f8;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .oddclaim {
+            background-color: #ffe0e0;
+        }
+        .evenclaim {
+            background-color: #ffffff;
+        }
+        .oddclaim:hover { 
+            background-color: #e0c1c1;
+        }
+        .evenclaim:hover { 
+            background-color: #f0f0f0;
+        }
+        .primary {
+            font-weight: bold;
+        }
+        table.innertable tbody tr:nth-of-type(even) {
+            background-color: #fff2f2;
+        }
+        table.innertable tbody tr:nth-of-type(odd) {
+            background-color: #ffffff;
+        }
+        td, th {
+            text-align: left;
+            padding: 6px;
+        }
+        .amount {
+            text-align: right;
+        }
+        .legend {
+            font-family: Arial;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .white {
+            background-color: #ffffff !important;
+        }
+        .iconcolumn {
+            width:  2%;
+        }
+        .patientcolumn {
+            width: 14%;
+        }
+        .payercolumn {
+            width: 12%;
+        }
+        .providercolumn {
+            width: 13%;
+        }
+        .claimcolumn {
+            width: 10%;
+        }
+        .servicedatecolumn {
+            width:  4%;
+        }
+        .updatedcolumn {
+            width:  4%;
+        }
+        .amountcolumn {
+            width: 10%;
+        }
+        .statuscolumn {
+            width: 12%;
+        }
+        .batchcolumn {
+            width: 11%;
+        }
+        .lastcolumn {
+            width:  4%;
+        }
+        .idatecolumn {
+            width: 20%;
+        }
+        .isourcesolumn {
+            width: 15%;
+        }
+        .istatuscolumn {
+            width: 15%;
+        }
+        .imessagecolumn {
+            width: 25%;
+        }
+        .icorrespondencecolumn {
+            width: 25%;
+        }
+
+    /* The following was copied from screen.css. */
+    /* Selectors were modified. */
+    .statusIcon span {
+        display: inline-block; /* modified from block; */
+        width: 19px;
+        height: 19px;
+        background-image: url("status-icons.png"); /* link was modified */
+        background-repeat: no-repeat;
+        text-indent: -9999px;
+    }
+
+    .statusIcon span.failed {
+        background-position: 0 top;
+    }
+
+    .statusIcon span.duplicate {
+        background-position: -19px top;
+    }
+
+    .statusIcon span.ready {
+        background-position: -38px top;
+    }
+
+    .statusIcon span.processed {
+        background-position: -57px top;
+    }
+
+    .statusIcon span.paper {
+        background-position: -76px top;
+    }
+
+    .statusIcon span.payPatient {
+        background-position: -95px top;
+    }
+
+    .statusIcon span.deleted {
+        background-position: -114px top;
+    }
+
+    /* New entry. Also, status-icons.png was modified to add resubmitted icon. */
+    .statusIcon span.resubmitted {
+        background-position: -133px top;
+    }
+
+    </style>
+</head>
+
+<body>
+    <table class="claimtable outertable" id="responseDetail">
+        <thead class="outerthead">
+            <tr class="outerheadrow">
+                <th class="iconcolumn"></th>
+                <th class="iconcolumn"></th>
+                <th class="patientcolumn">Patient</th>
+                <th class="payercolumn">Payer</th>
+                <th class="providercolumn">Provider</th>
+                <th class="claimcolumn">Claim</th>
+                <th class="servicedatecolumn">Service Date</th>
+                <th class="updatedcolumn">Updated</th>
+                <th class="amount amountcolumn">Amount</th>
+                <th class="statuscolumn">Status</th>
+                <th class="batchcolumn">Batch</th>
+                <th class="lastcolumn"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="evenclaim" data-level="1" data-isopen="1">
+                <td>+</td>
+                <td>&nbsp;</td>
+                <td>Public, John Q</td>
+                <td>Cigna</td>
+                <td>Jane Smith</td>
+                <td>310</td>
+                <td>11/3/2015</td>
+                <td>11/12/2015</td>
+                <td class="amount">$106.00</td>
+                <td>Payer Paid</td>
+                <td>1106151400ABC</td>
+                <td class="statusIcon"></td>
+            </tr>
+            <tr class="evenclaim" data-level="2">
+                <td>&nbsp;</td>
+                <td colspan="11">
+                    <table class="claimtable innertable">
+                        <thead class="innerthead">
+                            <tr>
+                                <th class="idatecolumn">Date</th>
+                                <th class="isourcesolumn">Source</th>
+                                <th class="istatuscolumn">Status</th>
+                                <th class="imessagecolumn">Message</th>
+                                <th class="icorrespondencecolumn">Payer Correspondence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11/3/2015</td>
+                                <td>Apex</td>
+                                <td>Received</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/4/2015</td>
+                                <td>Apex</td>
+                                <td>Processed</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/8/2015</td>
+                                <td>Payer</td>
+                                <td>Accepted</td>
+                                <td></td>
+                                <td>112284564.277</td>
+                            </tr>
+                            <tr>
+                                <td>11/12/2015</td>
+                                <td>Payer</td>
+                                <td>Paid $89.00</td>
+                                <td>Check number 112233456</td>
+                                <td>ERA855425.835</td>
+                            </tr>
+                            <tr class="white">
+                                <td colspan="5"><button>Change and Resubmit Claim</button> <button>Print History</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>
+            <tr class="oddclaim" data-level="1" data-isopen="1">
+				<td>+</td>
+                <td>&nbsp;</td>
+                <td>Mae, Sallie</td>
+                <td>Cigna</td>
+                <td>Fred Jones</td>
+                <td>322</td>
+                <td>11/4/2015</td>
+                <td>11/6/2015</td>
+                <td class="amount">$103.00</td>
+                <td>Payer Accepted</td>
+                <td>1106151400ABC</td>
+                <td class="statusIcon"><span class="payPatient">$</span></td>
+            </tr>
+            <tr class="oddclaim" data-level="2">
+                <td>&nbsp;</td>
+                <td colspan="11">
+                    <table class="claimtable innertable">
+                        <thead class="innerthead">
+                            <tr>
+                                <th class="idatecolumn">Date</th>
+                                <th class="isourcesolumn">Source</th>
+                                <th class="istatuscolumn">Status</th>
+                                <th class="imessagecolumn">Message</th>
+                                <th class="icorrespondencecolumn">Payer Correspondence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11/3/2015</td>
+                                <td>Apex</td>
+                                <td>Received</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/4/2015</td>
+                                <td>Apex</td>
+                                <td>Processed</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/8/2015</td>
+                                <td>Payer</td>
+                                <td>Accepted</td>
+                                <td></td>
+                                <td>112284544.277</td>
+                            </tr>
+                            <tr>
+                                <td>11/12/2015</td>
+                                <td>Payer</td>
+                                <td>Paid $39.00</td>
+                                <td>Check number 662233456</td>
+                                <td>ERA855425.835</td>
+                            </tr>
+                            <tr class="white">
+                                <td colspan="5"><button>Change and Resubmit Claim</button> <button>Print History</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>			
+            <tr class="evenclaim" data-level="1" data-isopen="1">
+				<td>+</td>
+                <td>&nbsp;</td>
+                <td>Jones, Philip</td>
+                <td>Aetna</td>
+                <td>Jane Smith</td>
+                <td>331</td>
+                <td>11/5/2015</td>
+                <td>11/14/2015</td>
+                <td class="amount">$87.50</td>
+                <td>Payer Paid</td>
+                <td>1106151400ABC</td>
+                <td class="statusIcon"></td>
+            </tr>
+           <tr class="evenclaim" data-level="2">
+                <td>&nbsp;</td>
+                <td colspan="11">
+                    <table class="claimtable innertable">
+                        <thead class="innerthead">
+                            <tr>
+                                <th class="idatecolumn">Date</th>
+                                <th class="isourcesolumn">Source</th>
+                                <th class="istatuscolumn">Status</th>
+                                <th class="imessagecolumn">Message</th>
+                                <th class="icorrespondencecolumn">Payer Correspondence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11/3/2015</td>
+                                <td>Apex</td>
+                                <td>Received</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/4/2015</td>
+                                <td>Apex</td>
+                                <td>Processed</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/8/2015</td>
+                                <td>Payer</td>
+                                <td>Accepted</td>
+                                <td></td>
+                                <td>112284264.277</td>
+                            </tr>
+                            <tr>
+                                <td>11/12/2015</td>
+                                <td>Payer</td>
+                                <td>Paid $89.00</td>
+                                <td>Check number 1122333346</td>
+                                <td>ERA835425.835</td>
+                            </tr>
+                            <tr class="white">
+                                <td colspan="5"><button>Change and Resubmit Claim</button> <button>Print History</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>			
+            <tr class="oddclaim" data-level="1" data-isopen="1">
+                <td>+</td>
+                <td>&nbsp;</td>
+                <td>Wilson, George</td>
+                <td>Cigna</td>
+                <td>Fred Jones</td>
+                <td>335</td>
+                <td>11/5/2015</td>
+                <td>11/18/2015</td>
+                <td class="amount">$109.00</td>
+                <td>Payer Accepted</td>
+                <td>1106151400ABC</td>
+                <td class="statusIcon"><span class="resubmitted">R</span></td>
+            </tr>
+            <tr class="oddclaim primary" data-level="2" data-isopen="1">
+                <td></td>
+                <td>+</td>
+                <td>Wilson, George</td>
+                <td>Cigna</td>
+                <td>Fred Jones</td>
+                <td>335</td>
+                <td>11/5/2015</td>
+                <td>11/15/2015</td>
+                <td class="amount">$109.00</td>
+                <td>Resubmitted</td>
+                <td>1106151400ABC</td>
+                <td class="statusIcon"></td>
+            </tr>
+            <tr class="oddclaim" data-level="3">
+                <td></td>
+                <td></td>
+                <td colspan="10">
+                    <table class="claimtable innertable">
+                        <thead class="innerthead">
+                            <tr>
+                                <th class="idatecolumn">Date</th>
+                                <th class="isourcesolumn">Source</th>
+                                <th class="istatuscolumn">Status</th>
+                                <th class="imessagecolumn">Message</th>
+                                <th class="icorrespondencecolumn">Payer Correspondence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11/5/2015</td>
+                                <td>Apex</td>
+                                <td>Received</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/6/2015</td>
+                                <td>Apex</td>
+                                <td>Processed</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/10/2015</td>
+                                <td>Payer</td>
+                                <td>Accepted</td>
+                                <td></td>
+                                <td>1122847823.277</td>
+                            </tr>
+                            <tr>
+                                <td>11/14/2015</td>
+                                <td>Payer</td>
+                                <td>Denied</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/15/2015</td>
+                                <td>Apex</td>
+                                <td>Resubmitted</td>
+                                <td>Resubmitted as 412</td>
+                                <td></td>
+                            </tr>
+                            <tr class="white">
+                                <td colspan="5"><button>Print History</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr class="oddclaim" data-level="2" data-isopen="1">
+                <td></td>
+                <td>+</td>
+                <td>Wilson, George</td>
+                <td>Cigna</td>
+                <td>Fred Jones</td>
+                <td>412</td>
+                <td>11/5/2015</td>
+                <td>11/18/2015</td>
+                <td class="amount">$109.00</td>
+                <td>Payer Accepted</td>
+                <td>1106152634DEF</td>
+                <td></td>
+            </tr>
+            <tr class ="oddclaim" data-level="3">
+                <td></td>
+                <td></td>
+                <td colspan="10">
+                    <table class="claimtable innertable">
+                        <thead class="innerthead">
+                            <tr>
+                                <th class="idatecolumn">Date</th>
+                                <th class="isourcesolumn">Source</th>
+                                <th class="istatuscolumn">Status</th>
+                                <th class="imessagecolumn">Message</th>
+                                <th class="icorrespondencecolumn">Payer Correspondence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11/15/2015</td>
+                                <td>Apex</td>
+                                <td>Received</td>
+                                <td>Resubmission of 335</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/17/2015</td>
+                                <td>Apex</td>
+                                <td>Processed</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/18/2015</td>
+                                <td>Payer</td>
+                                <td>Accepted</td>
+                                <td></td>
+                                <td>112288536.277</td>
+                            </tr>
+                            <tr class="white">
+                                <td colspan="5"><button>Change and Resubmit Claim</button> <button>Print History</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr class="evenclaim" data-level="1" data-isopen="1">
+                <td>+</td>
+                <td>&nbsp;</td>
+                <td>Mac, Freddie</td>
+                <td>Cigna</td>
+                <td>Fred Jones</td>
+                <td>340</td>
+                <td>11/6/2015</td>
+                <td>11/20/2015</td>
+                <td class="amount">$107.00</td>
+                <td>Payer Paid</td>
+                <td>1106151400ABC</td>
+                <td class="statusIcon"></td>
+            </tr>
+           <tr class="evenclaim" data-level="2">
+                <td>&nbsp;</td>
+                <td colspan="11">
+                    <table class="claimtable innertable">
+                        <thead class="innerthead">
+                            <tr>
+                                <th class="idatecolumn">Date</th>
+                                <th class="isourcesolumn">Source</th>
+                                <th class="istatuscolumn">Status</th>
+                                <th class="imessagecolumn">Message</th>
+                                <th class="icorrespondencecolumn">Payer Correspondence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11/3/2015</td>
+                                <td>Apex</td>
+                                <td>Received</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/4/2015</td>
+                                <td>Apex</td>
+                                <td>Processed</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/8/2015</td>
+                                <td>Payer</td>
+                                <td>Accepted</td>
+                                <td></td>
+                                <td>112284564.277</td>
+                            </tr>
+                            <tr>
+                                <td>11/12/2015</td>
+                                <td>Payer</td>
+                                <td>Paid $89.00</td>
+                                <td>Check number 112233456</td>
+                                <td>ERA855425.835</td>
+                            </tr>
+                            <tr class="white">
+                                <td colspan="5"><button>Change and Resubmit Claim</button> <button>Print History</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>						
+            <tr class="oddclaim" data-level="1" data-isopen="1">
+                <td>+</td>
+                <td>&nbsp;</td>
+                <td>Rowe, Jane</td>
+                <td>Cigna</td>
+                <td>Jane Smith</td>
+                <td>361</td>
+                <td>11/9/2015</td>
+                <td>11/11/2015</td>
+                <td class="amount">$102.00</td>
+                <td>Sent to Payer</td>
+                <td>1106151400ABC</td>
+                <td class="statusIcon"></td>
+            </tr>
+            <tr class="oddclaim" data-level="2">
+                <td>&nbsp;</td>
+                <td colspan="11">
+                    <table class="claimtable innertable">
+                        <thead class="innerthead">
+                            <tr>
+                                <th class="idatecolumn">Date</th>
+                                <th class="isourcesolumn">Source</th>
+                                <th class="istatuscolumn">Status</th>
+                                <th class="imessagecolumn">Message</th>
+                                <th class="icorrespondencecolumn">Payer Correspondence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11/3/2015</td>
+                                <td>Apex</td>
+                                <td>Received</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/4/2015</td>
+                                <td>Apex</td>
+                                <td>Processed</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/8/2015</td>
+                                <td>Payer</td>
+                                <td>Accepted</td>
+                                <td></td>
+                                <td>112284564.277</td>
+                            </tr>
+                            <tr>
+                                <td>11/12/2015</td>
+                                <td>Payer</td>
+                                <td>Paid $89.00</td>
+                                <td>Check number 112233456</td>
+                                <td>ERA855425.835</td>
+                            </tr>
+                            <tr class="white">
+                                <td colspan="5"><button>Change and Resubmit Claim</button> <button>Print History</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>						
+            <tr class="evenclaim" data-level="1" data-isopen="1">
+                <td>+</td>
+                <td>&nbsp;</td>
+                <td>Wilson, George</td>
+                <td>Cigna</td>
+                <td>Fred Jones</td>
+                <td>412</td>
+                <td>11/5/2015</td>
+                <td>11/18/2015</td>
+                <td class="amount">$109.00</td>
+                <td>Payer Accepted</td>
+                <td>1106151400ABC</td>
+                <td class="statusIcon"><span class="resubmitted">R</span></td>
+            </tr>
+            <tr class="evenclaim" data-level="2" data-isopen="1">
+                <td></td>
+                <td>+</td>
+                <td>Wilson, George</td>
+                <td>Cigna</td>
+                <td>Fred Jones</td>
+                <td>335</td>
+                <td>11/5/2015</td>
+                <td>11/15/2015</td>
+                <td class="amount">$109.00</td>
+                <td>Resubmitted</td>
+                <td>1106151400ABC</td>
+                <td class="statusIcon"></td>
+            </tr>
+            <tr class="evenclaim" data-level="3">
+                <td></td>
+                <td></td>
+                <td colspan="10">
+                    <table class="claimtable innertable">
+                        <thead class="innerthead">
+                            <tr>
+                                <th class="idatecolumn">Date</th>
+                                <th class="isourcesolumn">Source</th>
+                                <th class="istatuscolumn">Status</th>
+                                <th class="imessagecolumn">Message</th>
+                                <th class="icorrespondencecolumn">Payer Correspondence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11/5/2015</td>
+                                <td>Apex</td>
+                                <td>Received</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/6/2015</td>
+                                <td>Apex</td>
+                                <td>Processed</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/10/2015</td>
+                                <td>Payer</td>
+                                <td>Accepted</td>
+                                <td></td>
+                                <td>1122847823.277</td>
+                            </tr>
+                            <tr>
+                                <td>11/14/2015</td>
+                                <td>Payer</td>
+                                <td>Denied</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/15/2015</td>
+                                <td>Apex</td>
+                                <td>Resubmitted</td>
+                                <td>Resubmitted as 412</td>
+                                <td></td>
+                            </tr>
+                            <tr class="white">
+                                <td colspan="5"><button>Print History</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr class="evenclaim primary" data-level="2" data-isopen="1">
+                <td></td>
+                <td>+</td>
+                <td>Wilson, George</td>
+                <td>Cigna</td>
+                <td>Fred Jones</td>
+                <td>412</td>
+                <td>11/5/2015</td>
+                <td>11/18/2015</td>
+                <td class="amount">$109.00</td>
+                <td>Payer Accepted</td>
+                <td>1106152634DEF</td>
+                <td></td>
+            </tr>
+            <tr class="evenclaim" data-level="3">
+                <td></td>
+                <td></td>
+                <td colspan="10">
+                    <table class="claimtable innertable">
+                        <thead class="innerthead">
+                            <tr>
+                                <th class="idatecolumn">Date</th>
+                                <th class="isourcesolumn">Source</th>
+                                <th class="istatuscolumn">Status</th>
+                                <th class="imessagecolumn">Message</th>
+                                <th class="icorrespondencecolumn">Payer Correspondence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11/15/2015</td>
+                                <td>Apex</td>
+                                <td>Received</td>
+                                <td>Resubmission of 335</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/17/2015</td>
+                                <td>Apex</td>
+                                <td>Processed</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>11/18/2015</td>
+                                <td>Payer</td>
+                                <td>Accepted</td>
+                                <td></td>
+                                <td>112288536.277</td>
+                            </tr>
+                            <tr class="white">
+                                <td colspan="5"><button>Change and Resubmit Claim</button> <button>Print History</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><button onclick="expandAll()">Expand all</button> <button onclick="collapseAll()">Collapse all</button></p>
+
+    <!-- These need to by styled to use the same buttons as the icon status column, but the existing stylesheet 
+         requires the buttons to be in an element that matches "#responseDetail td.statusIcon span". The id 
+         "responseDetail" is assigned to the main table, and it is not convenient to put the legend in a 
+         table. We need to figure out how to organize this better. -->
+    <p class="statusIcon">Legend: <span class="paper">P</span> Paper, <span class="payPatient">$</span> Paid to Patient, 
+        <span class="resubmitted">R</span> Resubmitted</p>
+</body>
+</html>

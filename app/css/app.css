@@ -1,0 +1,36 @@
+
+
+*{
+    box-sizing: border-box;
+}
+
+html , body{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+}
+
+.grid-container{
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.grid-default-header label{
+    color: #777777;
+    font-weight: normal;
+}
+
+ /*override stuffs*/
+.flexDataGridExpandCollapseCell , .flexDataGridExpandCollapseHeaderCell,  .flexDataGridPaddingCell  {
+    background: #E7E7E7 !important;
+}
+
+.flexDataGridPagerCell {
+    border-bottom: none !important;
+}
+
+.flexDataGridPaddingCell{
+    border-bottom-color: #E0E1E1 !important;
+}
