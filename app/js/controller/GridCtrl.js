@@ -48,6 +48,10 @@
         $scope.LogoRenderer = new flexiciousNmsp.ClassFactory(flexiciousNmsp.LogoRenderer);
         $scope.LinkRenderer = new flexiciousNmsp.ClassFactory(flexiciousNmsp.LinkRenderer);
 
+        $scope.indentColumnBackgroundFunction = function(cell, col){
+            return 0xE7E7E7;
+        }
+
         $scope.gridOptions = {
             dataProvider : [],
             delegate: $scope,
