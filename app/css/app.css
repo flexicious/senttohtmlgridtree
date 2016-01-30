@@ -33,4 +33,5 @@ html , body{
 
 .flexDataGridPaddingCell{
     border-bottom-color: #E0E1E1 !important;
+    border-right-color: #E0E1E1 !important;
 }
