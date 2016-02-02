@@ -8,6 +8,9 @@
 
         $scope.grid = null;
 
+        if(!flexiciousNmsp.Array)
+            flexiciousNmsp.Array = Array;
+
         var gridThemeStyle = {
             horizontalGridLines:true,
             horizontalGridLineColor : 0xEEEEEE,
@@ -171,7 +174,7 @@
             var inv=evt1.filter.parentObject;
             flexiciousNmsp.BusinessService.getInstance().getLineItemsForInvoice(inv.id,evt1.filter,
                 function(evt,token){
-                    $scope.grid.setChildData(evt1.filter.parentObject,new flexiciousNmsp.Array(evt.result.collection.slice()),evt.filter.getLevel().getParentLevel(),evt.result.totalRecords);
+                    $scope.grid.setChildData(evt1.filter.parentObject,new flexiciousNmsp.Array(evt.result.collection.slice()),evt1.filter.getLevel().getParentLevel(),evt.result.totalRecords);
                 }
             );
         };
