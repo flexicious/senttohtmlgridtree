@@ -54,6 +54,11 @@
         $scope.indentColumnBackgroundFunction = function(cell, col){
             return 0xE7E7E7;
         }
+		
+
+        $scope.indentColumnBackgroundFunction2 = function(cell, col){
+            return 0xA7E7E7;
+        }		
 
         $scope.gridOptions = {
             dataProvider : [],
@@ -174,7 +179,7 @@
             var inv=evt1.filter.parentObject;
             flexiciousNmsp.BusinessService.getInstance().getLineItemsForInvoice(inv.id,evt1.filter,
                 function(evt,token){
-                    $scope.grid.setChildData(evt1.filter.parentObject,new flexiciousNmsp.Array(evt.result.collection.slice()),evt1.filter.getLevel().getParentLevel(),evt.result.totalRecords);
+                    $scope.grid.setChildData(evt1.filter.parentObject,new flexiciousNmsp.Array(evt.result.collection.slice()),evt.filter.getLevel().getParentLevel(),evt.result.totalRecords);
                 }
             );
         };

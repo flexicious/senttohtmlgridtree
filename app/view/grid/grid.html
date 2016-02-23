@@ -28,19 +28,17 @@
         xifilter-Page-Sort-Change="gridLevelOneFilterPageSortChangeHandler"
         xifilter-Page-Sort-Mode="server">
         <columns>
-            <column xisortable="false" xiexclude-From-Settings="true" xiexclude-From-Export="true" xiexclude-From-Print="true" xitext-Align="center" xiwidth="30" xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction"></column>
-            <column xiwidth="100" xicolumn-Width-Mode="fixed" xiselectable="true" xidata-Field="id" xiheader-Text="ID" xifilter-Control="TextInput"></column>
-            <column xidata-Field="legalName" xiheader-Text="Name" xifilter-Control="TextInput"></column>
-            <column xiheader-Text="Logo" xiitem-Renderer="LogoRenderer"></column>
-            <column xiheader-Text="Website" xiitem-Renderer="LinkRenderer"></column>
-            <column xidata-Field="mailingAddress.line1" xiheader-Text="Address Line 1" xifilter-Control="TextInput"></column>
-            <column xidata-Field="mailingAddress.line2" xiheader-Text="Address Line 2" xifilter-Control="TextInput"></column>
-            <column xidata-Field="mailingAddress.city" xiheader-Text="City" xifilter-Control="TextInput"></column>
-            <column xidata-Field="mailingAddress.state" xiheader-Text="State" xifilter-Control="TextInput"></column>
-            <column xidata-Field="mailingAddress.country" xiheader-Text="Country" xifilter-Control="TextInput"></column>
-            <column xidata-Field="annualRevenue" xiheader-Text="Annual Revenue" xifilter-Control="TextInput"></column>
-            <column xidata-Field="numEmployees" xiheader-Text="Total Employees" xifilter-Control="TextInput"></column>
-            <column xienable-Cell-Click-Row-Select="false" xiexclude-From-Settings="true" xiexclude-From-Export="true" xiexclude-From-Print="true"></column>
+            <column xitext-Align="center" xiwidth="30" xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction"></column>
+            <column xidata-Field="patient" xiheader-Text="Patient" xifilter-Control="TextInput"></column>
+            <column xidata-Field="addedDate" xiheader-Text="Service Date" xifilter-Control="TextInput" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+			<column xidata-Field="annualRevenue" xiheader-Text="Amount" xifilter-Control="TextInput"></column>
+            <column xidata-Field="payer" xiheader-Text="Payer" xifilter-Control="TextInput"></column>
+			<column xidata-Field="status" xiheader-Text="Status" xifilter-Control="TextInput"></column>
+			<column xidata-Field="provider" xiheader-Text="Provider" xifilter-Control="TextInput"></column>
+			<column xiwidth="100" xicolumn-Width-Mode="fixed" xiselectable="true" xidata-Field="id" xiheader-Text="Claim" xifilter-Control="TextInput"></column>
+			<column xidata-Field="addedDate" xiheader-Text="Last Updated" xifilter-Control="TextInput" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+            <column xiheader-Text="EOB" xiitem-Renderer="LinkRenderer"></column>
+            <column xienable-Cell-Click-Row-Select="false" xiexclude-From-Settings="true" xiexclud e-From-Export="true" xiexclude-From-Print="true"></column>
         </columns>
         <next-level>
             <level xichildren-Field="invoices"
@@ -49,39 +47,47 @@
                    xiforce-Pager-Row="true"
                    xiitem-Load="gridLevelTwoItemLoadHandler"
                    xifilter-Page-Sort-Mode="server"
-                   xifilter-Page-Sort-Change="gridLevelTwoFilterPageSortChangeHandler">
+                   xifilter-Page-Sort-Change="gridLevelTwoFilterPageSortChangeHandler"  >
                 <columns>
-                    <column xiwidth="30" xisortable="false" xiexclude-From-Settings="true" xiexclude-From-Export="true" xiexclude-From-Print="true" xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction"></column>
-                    <column xiwidth="30" xisortable="false" xiexclude-From-Settings="true" xiexclude-From-Export="true" xiexclude-From-Print="true" xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction"></column>
-                    <column xieditable="true" xidata-Field="dealDescription" xiheader-Text="Deal Description" xifooter-Align="center" xifooter-Label-Function2="getFooterLabel" ></column>
-                    <column xieditable="true" xidata-Field="dealAmount" xiheader-Text="Deal Amount" xitext-Align="right" xifooter-Align="right" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatCurrencyLabelFunction" xifooter-Label-Function2="getFooterLabel"></column>
-                    <column xiitem-Editor="flexiciousNmsp.DatePicker" xieditable="true" xieditor-Data-Field="selectedDate"  xidata-Field="dealDate" xiheader-Text="Deal Date" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+                    <column xiwidth="30" xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction" xisortable="false" ></column>
+                    <column xiwidth="30" xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction2" xisortable="false"></column>
+					<column xidata-Field="patient" xiheader-Text="Patient" xifilter-Control="TextInput"></column>
+					<column xidata-Field="addedDate" xiheader-Text="Service Date" xifilter-Control="TextInput" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+					<column xidata-Field="annualRevenue" xiheader-Text="Amount" xifilter-Control="TextInput"></column>
+					<column xidata-Field="payer" xiheader-Text="Payer" xifilter-Control="TextInput"></column>
+					<column xidata-Field="status" xiheader-Text="Status" xifilter-Control="TextInput"></column>
+					<column xidata-Field="provider" xiheader-Text="Provider" xifilter-Control="TextInput"></column>
+					<column xiwidth="100" xicolumn-Width-Mode="fixed" xiselectable="true" xidata-Field="id" xiheader-Text="Claim" xifilter-Control="TextInput"></column>
+					<column xidata-Field="addedDate" xiheader-Text="Last Updated" xifilter-Control="TextInput" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+					<column xiheader-Text="EOB" xiitem-Renderer="LinkRenderer"></column>				
                 </columns>
                 <next-level>
                     <level xichildren-Field="lineItems"
                            xiselected-Key-Field="id"
                            xiitem-Load-Mode="server"
-                           xiforce-Pager-Row="true"
+                           xiforce-Pager-Row="false"
                            xiitem-Load="gridLevelThreeItemLoadHandler"
                            xifilter-Page-Sort-Mode="server"
                            xifilter-Page-Sort-Change="gridLevelThreeFilterPageSortChangeHandler">
                         <columns>
-                            <column xiwidth="60" xisortable="false" xiexclude-From-Settings="true" xiexclude-From-Export="true" xiexclude-From-Print="true"  xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction"></column>
-                            <column xiwidth="30"  xisortable="false" xiexclude-From-Settings="true" xiexclude-From-Export="true" xiexclude-From-Print="true"  xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction"></column>
-                            <column xieditable="true" xidata-Field="id" xiheader-Text="Invoice Number" ></column>
-                            <column xiitem-Editor="flexiciousNmsp.DatePicker"  xieditable="true" xieditor-Data-Field="selectedDate"  xidata-Field="invoiceDate" xiheader-Text="Invoice Date"  xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
-                            <column xiitem-Editor="flexiciousNmsp.DatePicker"   xieditable="true" xieditor-Data-Field="selectedDate" xidata-Field="dueDate" xiheader-Text="Due Date" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+                            <column xiwidth="60" xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction" xisortable="false"></column>
+                            <column xiwidth="30" xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction2" xisortable="false"></column>
+ 							<column xieditable="true" xidata-Field="dealDate" xiheader-Text="Date" xifooter-Align="center" xifooter-Label-Function2="getFooterLabel" xicell-Background-Color-Function="indentColumnBackgroundFunction" xisortable="false" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+							<column xieditable="true" xidata-Field="source" xiheader-Text="Source" xitext-Align="left" xifooter-Align="right"  xisortable="false"></column>
+							<column xieditable="true" xidata-Field="status" xiheader-Text="Status" xitext-Align="left" xifooter-Align="right"  xisortable="false"></column>
+							<column xieditable="true" xidata-Field="message" xiheader-Text="Message" xitext-Align="left" xifooter-Align="right"  xisortable="false"></column>
+							<column xieditable="true" xidata-Field="payerCorrespondence" xiheader-Text="Payer Correspondence" xitext-Align="left" xifooter-Align="right"  xisortable="false"></column>
                         </columns>
                         <next-level>
                             <level
                                 xifilter-Page-Sort-Mode="server"
-                                xiforce-Pager-Row="true"
+                                xiforce-Pager-Row="false"
                                 xifilter-Page-Sort-Change="gridLevelFourFilterPageSortChangeHandler">
                                 <columns>
-                                    <column xiwidth="90" xisortable="false" xiexclude-From-Settings="true" xiexclude-From-Export="true" xiexclude-From-Print="true"  xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction"></column>
-                                    <column xiwidth="30" xisortable="false" xiexclude-From-Settings="true" xiexclude-From-Export="true" xiexclude-From-Print="true"  xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction"></column>
-                                    <column xieditable="true" xidata-Field="lineItemDescription" xiheader-Text="Line Item Description" xifooter-Label-Function2="getFooterLabel" xifooter-Align="center"></column>
-                                    <column xieditable="true" xidata-Field="lineItemAmount" xiheader-Text="Line Item Amount" xitext-Align="right" xifooter-Label-Function2="getFooterLabel" xifooter-Align="right" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatCurrencyLabelFunction"></column>
+                                    <column xiwidth="90" xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction" xisortable="false"></column>
+                                    <column xiwidth="30" xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction2" xisortable="false"></column>
+                                    <column xieditable="true" xidata-Field="lineItemDescription" xiheader-Text="Line Item Description" xifooter-Label-Function2="getFooterLabel" xifooter-Align="center" xisortable="false"></column>
+                                    <column xieditable="true" xidata-Field="lineItemAmount" xiheader-Text="Line Item Amount" xitext-Align="left" xifooter-Label-Function2="getFooterLabel" xifooter-Align="right" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatCurrencyLabelFunction" xisortable="false"></column>
                                 </columns>
                             </level>
                         </next-level>

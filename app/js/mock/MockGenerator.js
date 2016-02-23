@@ -821,6 +821,11 @@
         org.mailingAddress = FlexiciousMockGenerator.createAddress();
         org.billingContact=FlexiciousMockGenerator.createContact();
         org.salesContact=FlexiciousMockGenerator.createContact();
+	org.provider= org.salesContact.getDisplayName();
+	org.payer = "Aetna";;
+	org.status= "Rejected";
+	org.patient=org.billingContact.getDisplayName();
+	org.batch= "12345678cgn";
         org.annualRevenue = FlexiciousMockGenerator.getRandom(1000,60000)
         org.numEmployees = FlexiciousMockGenerator.getRandom(1000,60000)
         org.earningsPerShare = FlexiciousMockGenerator.getRandom(1,6) + (FlexiciousMockGenerator.getRandom(1,99)/100);
@@ -844,6 +849,18 @@
         deal.dealDescription = "Project # "+(org.deals.length+1)+" - " +org.legalName + " - "  + (deal.dealDate.getMonth()+1) + "/" +deal.dealDate.getFullYear();
         deal.dealStatus= FlexiciousMockGenerator.getRandomReferenceData(flexiciousNmsp.SystemConstants.dealStatuses).cloneSpecial();
         deal.id = (org.id*10)+(idx);
+        deal.billingContact=FlexiciousMockGenerator.createContact();
+        deal.salesContact=FlexiciousMockGenerator.createContact();		
+        deal.source = "ApexEdi";
+        deal.message = "ApexEdi";
+        deal.payerCorrespondence = "check number " + idx;	
+	deal.status	= "Paid";	
+	deal.provider= deal.salesContact.getDisplayName();
+	deal.payer = "Aetna";;
+	deal.status= "Rejected";
+	deal.patient=deal.billingContact.getDisplayName();
+	deal.batch= "12345678cgn";
+        deal.annualRevenue = FlexiciousMockGenerator.getRandom(1000,60000)		
         if(deep){
 
             for(var invoiceIDx=0;invoiceIDx<FlexiciousMockGenerator.INVOICES_PER_DEAL;invoiceIDx++){
@@ -857,11 +874,24 @@
     p.createInvoice=function(idx,deal,deep){
         var invoice = new flexiciousNmsp.Invoice();
         invoice.deal=deal;
+        invoice.dealDate = FlexiciousMockGenerator.getRandomDate();
         invoice.invoiceDate = FlexiciousMockGenerator.getRandomDate();
         invoice.id = (deal.id*10)+idx;
         invoice.invoiceStatus= FlexiciousMockGenerator.getRandomReferenceData(flexiciousNmsp.SystemConstants.invoiceStatuses).cloneSpecial();
         invoice.dueDate = flexiciousNmsp.DateUtils.dateAdd(flexiciousNmsp.DateUtils.DAY_OF_MONTH,30,invoice.invoiceDate);
         invoice.hasPdf = FlexiciousMockGenerator.getRandom(1,2)==1;
+        invoice.billingContact=FlexiciousMockGenerator.createContact();
+        invoice.salesContact=FlexiciousMockGenerator.createContact();		
+        invoice.source = "ApexEdi";
+        invoice.message = "ApexEdi";
+        invoice.payerCorrespondence = "check number " + idx;	
+	invoice.status	= "Paid";	
+	invoice.provider= invoice.salesContact.getDisplayName();
+	invoice.payer = "Aetna";;
+	invoice.status= "Rejected";
+	invoice.patient=invoice.billingContact.getDisplayName();
+	invoice.batch= "12345678cgn";
+        invoice.annualRevenue = FlexiciousMockGenerator.getRandom(1000,60000)		
         if(deep){
             for(var lineItemIDx=0;lineItemIDx<FlexiciousMockGenerator.LINEITEMS_PER_INVOICE;lineItemIDx++){
                 var lineItem = this.createInvoiceLineItem(lineItemIDx,invoice,deep);
