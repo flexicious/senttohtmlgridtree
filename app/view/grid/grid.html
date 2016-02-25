@@ -3,6 +3,7 @@
      ng-model="gridOptions"
      xienable-Active-Cell-Highlight="false"
      xidisplay-Order="header,filter,body,footer,pager"
+     xiselection-Mode="singleRow"
      xienable-Print="true"
      xiclear-Selection-On-Data-Provider-Change="false"
      xienable-Preference-Persistence="true"
@@ -13,10 +14,7 @@
      xienable-Selection-Bubble="true"
      xienable-Tri-State-Checkbox="true"
      xienable-Eager-Draw="true"
-     xienable-Toolbar-Actions="true"
-     xitoolbar-Action-Executed-Function="onExecuteToolbarAction"
-     xienable-Default-Disclosure-Icon="false"
-	 xitoolbar-Action-Valid-Function="isValidToolbarAction">
+     xienable-Default-Disclosure-Icon="false">
     <level
         xipage-Size="10"
         xienable-Paging="true"
@@ -45,12 +43,13 @@
                    xiselected-Key-Field="id"
                    xiitem-Load-Mode="server"
                    xiforce-Pager-Row="true"
+                   xipager-Renderer="ClaimPagerControl"
                    xiitem-Load="gridLevelTwoItemLoadHandler"
                    xifilter-Page-Sort-Mode="server"
                    xifilter-Page-Sort-Change="gridLevelTwoFilterPageSortChangeHandler"  >
                 <columns>
-                    <column xiwidth="30" xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction" xisortable="false" ></column>
-                    <column xiwidth="30" xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction2" xisortable="false"></column>
+                    <column xiwidth="30" xiexclude-From-Print="true" xiexclude-From-Settings="true" xiexclude-From-Export="true" xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction" xisortable="false" ></column>
+                    <column xiwidth="30" xiexclude-From-Print="true" xiexclude-From-Settings="true" xiexclude-From-Export="true" xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction2" xisortable="false"></column>
 					<column xidata-Field="patient" xiheader-Text="Patient" xifilter-Control="TextInput"></column>
 					<column xidata-Field="addedDate" xiheader-Text="Service Date" xifilter-Control="TextInput" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
 					<column xidata-Field="annualRevenue" xiheader-Text="Amount" xifilter-Control="TextInput"></column>
@@ -62,23 +61,23 @@
 					<column xiheader-Text="EOB" xiitem-Renderer="LinkRenderer"></column>				
                 </columns>
                 <next-level>
-                    <level xichildren-Field="lineItems"
+                    <level
                            xiselected-Key-Field="id"
-                           xiitem-Load-Mode="server"
-                           xiforce-Pager-Row="false"
+                           xiforce-Pager-Row="true"
+                           xipager-Renderer="ClaimStatusPagerControl"
                            xiitem-Load="gridLevelThreeItemLoadHandler"
                            xifilter-Page-Sort-Mode="server"
                            xifilter-Page-Sort-Change="gridLevelThreeFilterPageSortChangeHandler">
                         <columns>
-                            <column xiwidth="60" xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction" xisortable="false"></column>
-                            <column xiwidth="30" xicolumn-Width-Mode="fixed" xienable-Expand-Collapse-Icon="true" xicell-Background-Color-Function="indentColumnBackgroundFunction2" xisortable="false"></column>
- 							<column xieditable="true" xidata-Field="dealDate" xiheader-Text="Date" xifooter-Align="center" xifooter-Label-Function2="getFooterLabel" xicell-Background-Color-Function="indentColumnBackgroundFunction" xisortable="false" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
+                            <column xiwidth="60" xiexclude-From-Print="true" xiexclude-From-Settings="true" xiexclude-From-Export="true" xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction" xisortable="false"></column>
+                            <column xiwidth="30" xiexclude-From-Print="true" xiexclude-From-Settings="true" xiexclude-From-Export="true" xicolumn-Width-Mode="fixed" xicell-Background-Color-Function="indentColumnBackgroundFunction2" xisortable="false"></column>
+ 							<column xieditable="true" xidata-Field="dealDate" xiheader-Text="Date" xifooter-Align="center" xifooter-Label-Function2="getFooterLabel" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatDateLabelFunction"></column>
 							<column xieditable="true" xidata-Field="source" xiheader-Text="Source" xitext-Align="left" xifooter-Align="right"  xisortable="false"></column>
 							<column xieditable="true" xidata-Field="status" xiheader-Text="Status" xitext-Align="left" xifooter-Align="right"  xisortable="false"></column>
 							<column xieditable="true" xidata-Field="message" xiheader-Text="Message" xitext-Align="left" xifooter-Align="right"  xisortable="false"></column>
 							<column xieditable="true" xidata-Field="payerCorrespondence" xiheader-Text="Payer Correspondence" xitext-Align="left" xifooter-Align="right"  xisortable="false"></column>
                         </columns>
-                        <next-level>
+                       <!-- <next-level>
                             <level
                                 xifilter-Page-Sort-Mode="server"
                                 xiforce-Pager-Row="false"
@@ -90,7 +89,7 @@
                                     <column xieditable="true" xidata-Field="lineItemAmount" xiheader-Text="Line Item Amount" xitext-Align="left" xifooter-Label-Function2="getFooterLabel" xifooter-Align="right" xilabel-Function="flexiciousNmsp.UIUtils.dataGridFormatCurrencyLabelFunction" xisortable="false"></column>
                                 </columns>
                             </level>
-                        </next-level>
+                        </next-level>-->
                     </level>
                 </next-level>
             </level>

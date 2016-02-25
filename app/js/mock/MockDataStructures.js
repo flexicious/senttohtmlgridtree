@@ -251,6 +251,9 @@
     p.dealStatus=null;
     p.dealDescription=null;
     p.finalized=true;
+
+    p.type = "claim"; // TODO : added dummy for a test case..
+
     p.getDealAmount=function(){
         var total=0;
         for(var i=0;i<this.invoices.length;i++){
@@ -312,6 +315,9 @@
     p.invoiceStatus=null;
     p.lineItems=[];
     p.hasPdf=true;
+
+    p.type = "claimStatus";  // TODO : added for just a test case
+
     p.getInvoiceNumber=function(){
         return this.id;
 

@@ -50,15 +50,21 @@
 
         $scope.LogoRenderer = new flexiciousNmsp.ClassFactory(flexiciousNmsp.LogoRenderer);
         $scope.LinkRenderer = new flexiciousNmsp.ClassFactory(flexiciousNmsp.LinkRenderer);
+        $scope.ClaimPagerControl = new flexiciousNmsp.ClassFactory(flexiciousNmsp.ClaimPagerControl);
+        $scope.ClaimStatusPagerControl = new flexiciousNmsp.ClassFactory(flexiciousNmsp.ClaimStatusPagerControl);
+
+        var columnLevel = null;
+        var claimLevel = null;
+        var claimStatusLevel = null;
 
         $scope.indentColumnBackgroundFunction = function(cell, col){
             return 0xE7E7E7;
-        }
+        };
 		
 
         $scope.indentColumnBackgroundFunction2 = function(cell, col){
             return 0xA7E7E7;
-        }		
+        };
 
         $scope.gridOptions = {
             dataProvider : [],
@@ -71,12 +77,6 @@
             $scope.grid = event.target;
             var grid = $scope.grid;
 
-            this.toolbarActions.push(new flexiciousNmsp.ToolbarAction("Edit",-1,"","Edit Record"/* flexiciousNmsp.Constants.IMAGE_PATH + "/edit.png"*/,false,false,true,true));
-            this.toolbarActions.push(new flexiciousNmsp.ToolbarAction("Delete",-1,"","Delete Record"/*,flexiciousNmsp.Constants.IMAGE_PATH + "/delete.png"*/,false,false,true,true));
-            if(this.getPager())
-                this.getPager().rebuild();
-
-
             var f=new flexiciousNmsp.Filter();
             f.pageIndex=0;
             f.pageSize=grid.getPageSize();
@@ -88,25 +88,23 @@
                     grid.setTotalRecords(evt.result.totalRecords);
                 }
             );
+
+            grid.addEventListener(this, "edit", onGridEditRequest);
+            grid.addEventListener(this, "delete", onGridDeleteRequest);
+
+            columnLevel = grid.getColumnLevel();
+            claimLevel = columnLevel.nextLevel;
+            claimStatusLevel = claimLevel.nextLevel;
         };
 
-
-        $scope.isValidToolbarAction=function(action,currentTarget,extendedPager){
-            return extendedPager.level.getSelectedKeys().length==1;
+        var onGridEditRequest = function(event){
+            console.log("You can edit a from here. please look into event.item");
+            alert("You can edit a from here. please look into event.item");
         };
 
-        $scope.onExecuteToolbarAction=function(action,currentTarget,extendedPager){
-            if(action.code=="Edit")
-                // TODO : write the logic to edit an item, if wireup with server data or a real time environment
-                alert("Launch Edit Window: " + extendedPager.level.levelName + " with id " + extendedPager.level.getSelectedKeys()[0] )
-            else if(action.code=="Delete"){
-                if(confirm("Are you sure you wish to delete this record?")){
-                    // TODO : write the logic to delete an item, if wireup with server data or a real time environment
-                    alert("Trigger delete for: " + extendedPager.level.levelName + " with id " + extendedPager.level.getSelectedKeys()[0] )
-                }
-            }
-            else
-                alert("Invalid action!")
+        var onGridDeleteRequest = function(event){
+            console.log("You can delete a from here. please look into event.item");
+            alert("You can delete a from here. please look into event.item");
         };
 
         $scope.gridLevelOneItemLoadHandler = function(evt1){
