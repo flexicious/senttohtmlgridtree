@@ -1,0 +1,101 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="padding:0;width:100%;height: 99%">
+<head>
+<title>Grid Test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<script type="text/javascript" src="http://www.htmltreegrid.com/demo/external/js/adapters/jquery/jquery-1.8.2.js"></script>
+<script type="text/javascript" src="http://www.htmltreegrid.com/demo/external/js/adapters/jquery/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="http://www.htmltreegrid.com/demo/external/js/adapters/jquery/jquery.maskedinput-1.3.js"></script>
+<script type="text/javascript" src="http://www.htmltreegrid.com/demo/external/js/adapters/jquery/jquery.watermarkinput.js"></script>
+<script type="text/javascript" src="http://www.htmltreegrid.com/demo/external/js/adapters/jquery/jquery.ui.menu.js"></script>
+<script type="text/javascript" src="http://www.htmltreegrid.com/demo/external/js/adapters/jquery/jquery.toaster.js"></script>
+
+<script type="text/javascript" src="minified.js"></script>
+ 
+<script type="text/javascript" src="http://www.htmltreegrid.com/demo/examples/js/Configuration.js"></script>
+<script type="text/javascript" src="http://www.htmltreegrid.com/demo/themes.js"></script>
+
+<link rel="stylesheet" href="http://www.htmltreegrid.com/demo/flexicious/css/flexicious.css" type="text/css"/>
+
+<script>
+
+/*
+        this.addEventListener(this,flxConstants.EVENT_KEY_UP,function(e){
+            var str = String.fromCharCode(e.keyCode);
+            if((str>='0'&&str<='9')|| (e.keyCode >= 96 && e.keyCode <= 105)||(str>='a'&&str<='z')||(str>='A'&&str<='Z') ||  e.keyCode == flxConstants.KEYBOARD_DELETE||  e.keyCode == flxConstants.KEYBOARD_BACKSPACE){
+                this.dispatchEvent(new flexiciousNmsp.BaseEvent(flxConstants.EVENT_VALUE_COMMIT));
+            }
+        });//so delay change is initialized
+        this.addEventListener(this,flxConstants.EVENT_KEY_DOWN,function(e)
+        {
+            this.textBoxValue=this.getTextBox().value;
+            var str = String.fromCharCode(e.keyCode);
+            if((str>='0'&&str<='9')||(str>='a'&&str<='z')||(str>='A'&&str<='Z')){
+                this.dispatchEvent(new flexiciousNmsp.FlexDataGridEvent(flxConstants.EVENT_CHANGE));
+            }
+        });//some browsers do not dispatch change on keydown.
+
+
+*/
+ $(document).ready(function () {
+            var grid = new flexiciousNmsp.FlexDataGrid(document.getElementById("gridContainer"),
+                    {
+ 
+                        configuration: '<grid id="grid" editable="true" enablePrint="true" enablePreferencePersistence="true" enableExport="true" forcePagerRow="true" pageSize="50" enableFilters="true" enableFooters="true" enablePaging="true">' +
+                                    '               <level>' +
+                                    '                      <columns>' +
+                                    '                   <column type="checkbox"/>'+
+                                    '                             <column dataField="id" headerText="ID"  footerLabel="Sum: " footerOperation="sum" footerOperationPrecision="2"/>' +
+                                    '                             <column dataField="type" headerText="Type" itemRenderer="flexiciousNmsp.EncodedItemRenderer" filterControl="TextInput" filterOperation="Contains" />' +
+                                    '                      </columns>' +
+                                    '               </level>' +
+                                    '         ' +
+                                    '  </grid>',
+                        dataProvider: [
+                                              { "id": "5001", "type": "<None>", "active": true },
+                                              { "id": "5002", "type": "Glazed", "active": true },
+                                              { "id": "5005", "type": "Sugar", "active": true },
+                                              { "id": "5007", "type": "Powdered Sugar", "active": false },
+                                              { "id": "5006", "type": "Chocolate with Sprinkles", "active": true },
+                                              { "id": "5003", "type": "Chocolate", "active": false },
+                                              { "id": "5004", "type": "Maple", "active": true }
+                                       ]
+                    });
+ 
+        });
+		
+/**
+ * Flexicious
+ * Copyright 2011, Flexicious LLC
+ */
+(function () {
+    "use strict";
+    var EncodedItemRenderer;
+    EncodedItemRenderer = function (tag) {
+
+        flexiciousNmsp.Label.apply(this, [tag]); 
+    };
+    flexiciousNmsp.EncodedItemRenderer = EncodedItemRenderer; //add to name space
+    EncodedItemRenderer.prototype = new flexiciousNmsp.Label(); //setup hierarchy
+    EncodedItemRenderer.prototype.typeName = EncodedItemRenderer.typeName = "EncodedItemRenderer";//for quick inspection
+    EncodedItemRenderer.prototype.getClassNames = function () { //for support of "is" keyword
+        return ["UIComponent", this.typeName];
+    }; 
+    EncodedItemRenderer.prototype.setText = function (val) { 
+		this.domElement.textContent = val;
+    }; 
+}());
+		
+</script>
+</head>
+<!--
+<body onload="myCompanyNameSpace.onBodyLoad();myCompanyNameSpace.SizeTabs();">
+-->
+<body style="padding:0;width:100%;height: 99%">
+  <div id="gridContainer" style="padding:0;width:100%;height: 99%"></div> 
+</div>
+	
+</body>
+</html>
